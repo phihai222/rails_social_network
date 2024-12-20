@@ -1,6 +1,15 @@
 class Api::V1::AuthController < ApplicationController
   def registration
-    render json: { message: "User registered successfully" }, status: :created
+    payload = ::RegistrationDTO.new(params.permit(:email, :password))
+
+    puts "payload.email:: #{payload.email}"
+
+    if payload.valid?
+      render json: { message: "User registered successfully" }, status: :created
+    else
+      render json: { errors: payload.errors.full_messages }, status: :bad_request
+    end
+
   end
 
   def login
