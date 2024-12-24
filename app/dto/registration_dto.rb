@@ -16,4 +16,11 @@ class RegistrationDto
             format: { with: EMAIL_REGEX, message: "is not a valid email address" }
   validates :password, presence: true, length: { minimum: 6 },
             format: { with: STRONG_PASSWORD_REGEX, message: "password must be strong" }
+
+  def to_h
+    {
+      email: email,
+      password: password
+    }
+  end
 end
