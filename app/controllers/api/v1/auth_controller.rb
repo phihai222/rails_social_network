@@ -1,30 +1,26 @@
 class Api::V1::AuthController < ApplicationController
   def registration
     payload = ::RegistrationDto.new(params.permit(:email, :password))
+    service = RegistrationService.new(payload)
 
-    if payload.valid?
-      # Validate existed email in database
-      if User.exists?(email: payload.email)
-        render json: { error: "User already exists" }, status: 409
-      else
-        save_user(payload)
-      end
-    else
-      # Validation errors
+    unless payload.valid?
       render json: { errors: payload.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    if service.email_already_exists?
+      render json: { error: Constant::USER_ALREADY_EXISTS }, status: :conflict
+      return
+    end
+
+    if service.register_user
+      render json: { message: Constant::USER_REGISTRATION_SUCCESS }, status: :created
+    else
+      render json: { errors: service.errors }, status: :unprocessable_entity
     end
   end
 
   def login
     render json: { message: "Login successful" }, status: :ok
-  end
-
-  def save_user(new_user)
-    # Save new user
-    @user = User.create(new_user.to_h)
-
-    if @user.save
-      render json: { message: "User registered successfully" }, status: :created
-    end
   end
 end
