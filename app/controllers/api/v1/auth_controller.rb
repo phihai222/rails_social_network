@@ -1,6 +1,6 @@
 class Api::V1::AuthController < ApplicationController
   def registration
-    payload = ::RegistrationDTO.new(params.permit(:email, :password))
+    payload = ::RegistrationDto.new(params.permit(:email, :password))
 
     puts "payload.email:: #{payload.email}"
 
