@@ -7,6 +7,7 @@ Rails.application.routes.draw do
         collection do
           post :registration
           post :login
+          post :validate_otp
         end
       end
       resources :ping, only: [:index] do

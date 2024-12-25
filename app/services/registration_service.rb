@@ -19,4 +19,11 @@ class RegistrationService
       false
     end
   end
+
+  def activate_user(email)
+    user = User.find_by(email: email)
+    if user
+      user.update(active: true)
+    end
+  end
 end

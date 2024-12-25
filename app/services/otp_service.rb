@@ -7,8 +7,19 @@ class OtpService
 
   def generate_and_store_otp(email)
     otp = rand(100000..999999).to_s # Generate a random 6-digit OTP
-    set_otp(email, otp) # Save email as key and OTP as value in Redis
+    otp_hash = BCrypt::Password.create(otp) # Encrypt the OTP before saving it
+    set_otp(email, otp_hash) # Save email as key and encrypted OTP as value in Redis
     otp
+  end
+
+  def validate_otp(email, otp)
+    stored_otp_hash = get_otp(email) # Retrieve the encrypted OTP from Redis
+    if stored_otp_hash && BCrypt::Password.new(stored_otp_hash) == otp
+      delete_otp(email) # Remove OTP after successful validation
+      true
+    else
+      false
+    end
   end
 
   def set_otp(key, value, ttl = 300)
