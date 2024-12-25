@@ -9,7 +9,7 @@ class RegistrationDto
     (?=.*[a-z])       # At lease one letter lowercase
     (?=.*\d)          # At lease one number
     (?=.*[@#$%^&*])   # At lease one special character
-    .{8,}             # Minimum length 8
+    .{6,}             # Minimum length 6
   \z/x
 
   validates :email, presence: true, length: { maximum: 100 },

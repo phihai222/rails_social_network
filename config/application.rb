@@ -28,5 +28,13 @@ module RailsSocialNetwork
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # This block will run when application start
+    # config.after_initialize do
+    #   puts "APPLICATION START"
+    #
+    #   puts "Environment Variables:"
+    #   ENV.each { |key, value| puts "#{key}: #{value}" }
+    # end
   end
 end

@@ -2,7 +2,7 @@ require "redis"
 
 class OtpService
   def initialize
-    @redis = Redis.new(host: "localhost", port: 6379, db: 0)
+    @redis = Redis.new(host: ENV.fetch("REDIS_HOST", "localhost"), port: 6379, db: 0)
   end
 
   def generate_and_store_otp(email)
