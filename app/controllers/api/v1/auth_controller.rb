@@ -14,7 +14,9 @@ class Api::V1::AuthController < ApplicationController
     end
 
     if service.register_user
-      render json: { message: Constant::USER_REGISTRATION_SUCCESS }, status: :created
+      otp_service = OtpService.new
+      otp = otp_service.generate_and_store_otp(payload.email)
+      render json: { message: Constant::USER_REGISTRATION_SUCCESS, otp: otp.as_json }, status: :created
     else
       render json: { errors: service.errors }, status: :unprocessable_entity
     end

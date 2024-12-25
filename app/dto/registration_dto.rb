@@ -20,7 +20,8 @@ class RegistrationDto
   def to_h
     {
       email: email,
-      password: password
+      password: password,
+      active: false
     }
   end
 end
