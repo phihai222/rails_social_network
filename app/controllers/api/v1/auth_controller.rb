@@ -70,8 +70,8 @@ class Api::V1::AuthController < ApplicationController
       return
     end
 
-    # If password is valid and active == true
-    # TODO generate JWT Token
-    render json: { message: "Login successful" }, status: :ok
+    # If password is valid and active == true, return JWT token
+    token = JwtService.encode({ user_id: user.id })
+    render json: { message: "Login successful", token: token }, status: :ok
   end
 end
