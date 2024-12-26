@@ -1,6 +1,6 @@
 class Api::V1::AuthController < ApplicationController
   def registration
-    payload = ::RegistrationDto.new(params.permit(:email, :password))
+    payload = ::AuthDto.new(params.permit(:email, :password))
     service = RegistrationService.new(payload)
 
     unless payload.valid?
@@ -40,6 +40,38 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def login
+    payload = ::AuthDto.new(params.permit(:email, :password))
+    payload.skip_password_validation = true
+
+    # Validate data
+    unless payload.valid?
+      render json: { errors: payload.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    # Check user existed or not
+    user = User.find_by(email: payload.email)
+    if user.nil?
+      render json: { error: "Invalid email or password" }, status: :not_found
+      return
+    end
+
+    # If existed, validate hash password
+    unless user.authenticate(payload.password)
+      render json: { error: "Invalid email or password" }, status: :unauthorized
+      return
+    end
+
+    # If password valid, check active == true
+    unless user.active
+      otp_service = OtpService.new
+      otp = otp_service.generate_and_store_otp(user.email)
+      render json: { message: "Account inactive. OTP sent", otp: otp.as_json }, status: :unauthorized
+      return
+    end
+
+    # If password is valid and active == true
+    # TODO generate JWT Token
     render json: { message: "Login successful" }, status: :ok
   end
 end

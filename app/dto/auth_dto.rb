@@ -1,6 +1,14 @@
-class RegistrationDto
+class AuthDto
   include ActiveModel::Model
   attr_accessor :email, :password
+
+  def skip_password_validation
+    @skip_password_validation ||= false
+  end
+
+  def skip_password_validation=(value)
+    @skip_password_validation = value
+  end
 
   EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -14,8 +22,10 @@ class RegistrationDto
 
   validates :email, presence: true, length: { maximum: 100 },
             format: { with: EMAIL_REGEX, message: "is not a valid email address" }
+
   validates :password, presence: true, length: { minimum: 6 },
-            format: { with: STRONG_PASSWORD_REGEX, message: "password must be strong" }
+            format: { with: STRONG_PASSWORD_REGEX, message: "password must be strong" },
+            unless: :skip_password_validation # Skip validate password for login purpose
 
   def to_h
     {
