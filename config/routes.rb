@@ -15,6 +15,11 @@ Rails.application.routes.draw do
           post :test_post
         end
       end
+      resources :user, only: [] do
+        collection do
+          get :me
+        end
+      end
     end
   end
 
