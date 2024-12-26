@@ -13,6 +13,7 @@ class RegistrationService
   def register_user
     @user = User.new(@payload.to_h)
     if @user.save
+      @user_info = UserService.new.save_user_info(@user.id)
       true
     else
       @errors = @user.errors.full_messages

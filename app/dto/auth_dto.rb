@@ -29,9 +29,10 @@ class AuthDto
 
   def to_h
     {
-      email: email,
+      email: email.downcase,
       password: password,
-      active: false
+      active: true,
+      twoMFA: false
     }
   end
 end
