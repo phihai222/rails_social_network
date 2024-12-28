@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => '/api-docs'
-  mount Rswag::Api::Engine => '/api-docs'
+  mount Rswag::Ui::Engine => "/api-docs"
+  mount Rswag::Api::Engine => "/api-docs"
   namespace :api do
     namespace :v1 do
       resources :auth, only: [] do
@@ -15,9 +15,10 @@ Rails.application.routes.draw do
           post :test_post
         end
       end
-      resources :user, only: [] do
+      resources :users, only: [] do
         collection do
           get :me
+          patch "me", to: "users#update_me"
         end
       end
     end
