@@ -21,6 +21,11 @@ Rails.application.routes.draw do
           patch "me", to: "users#update_me"
         end
       end
+      resources :posts, only: [:create, :show] do
+        collection do
+          get :me
+        end
+      end
     end
   end
 
